@@ -122,18 +122,19 @@ def consent():
 
 def footer(route):
     terms = ''.join(f'<dt>{esc(k)}</dt><dd>{esc(v)}</dd>' for k, v in LEGAL['requisites'].items())
-
-    def row(label, value):
-        return f'<div class="fc-row"><span class="fc-label">{esc(label)}</span>{value}</div>'
-    contacts = ('<div class="foot-contacts">'
-                + row(LABEL['phone'], f'<a class="fc-phone" href="{PHONE}">{esc(C["phone"])}</a>')
-                + row(C['whatsappLabel'], f'<a href="{WHATSAPP}">{esc(C["messengerPhone"])}</a>')
-                + row(LABEL['max'], f'<span>{max_value()}</span>')
-                + row(C['addressLabel'].rstrip(':'), f'<span>{esc(C["address"])}<br>{esc(C["hours"])}</span>')
-                + f'<div class="fc-actions"><a class="fc-btn" href="{esc(C["bot"])}">{esc(LABEL["footerBot"])}</a>'
-                  f'<a class="fc-btn" href="/kontakty#feedback">{esc(LABEL["feedback"])}</a>{social()}</div></div>')
-    return f'''<footer><div class="wrap footgrid"><div>{wordmark()}</div>
-    <nav aria-label="Разделы в подвале">{''.join(navlink(p_, route) for p_ in PAGES[1:])}</nav>{contacts}</div>
+    # In the footer MAX is a plain number until the studio sends the link; the [уточнить] mark stays on /kontakty
+    max_number = f'<a href="{esc(C["maxUrl"])}">{esc(C["messengerPhone"])}</a>' if C['maxUrl'] else esc(C['messengerPhone'])
+    lines = ''.join(f'<dt>{esc(label)}</dt><dd>{value}</dd>' for label, value in (
+        (LABEL['phone'], f'<a href="{PHONE}">{esc(C["phone"])}</a>'),
+        (C['whatsappLabel'], f'<a href="{WHATSAPP}">{esc(C["messengerPhone"])}</a>'),
+        (LABEL['max'], max_number)))
+    contacts = (f'<div class="foot-contacts"><span class="foot-title">Связь</span><dl>{lines}</dl>'
+                f'<div class="fc-actions"><a class="fc-btn" href="{esc(C["bot"])}">{esc(LABEL["footerBot"])}{arrow()}</a>'
+                f'<a class="fc-btn" href="/kontakty#feedback">{esc(LABEL["feedback"])}{arrow("→")}</a></div></div>')
+    studio = f'<div class="foot-studio">{wordmark()}<p>{esc(C["address"])}<br>{esc(C["hours"])}</p>{social()}</div>'
+    links = ''.join(navlink(p_, route) for p_ in PAGES[1:])
+    return f'''<footer><div class="wrap footgrid">{studio}
+    <nav aria-label="Разделы в подвале"><span class="foot-title">Разделы</span><div class="foot-links">{links}</div></nav>{contacts}</div>
     <div class="wrap legal"><details><summary>{esc(LABEL['requisites'])}</summary><dl>{terms}</dl></details>
     <div class="policy-links"><a href="{esc(LEGAL['policy'])}">{esc(LABEL['policy'])}</a><a href="{esc(LEGAL['approval'])}">{esc(LABEL['approval'])}</a>
     <button type="button" class="linklike" data-cookie-open>{esc(LABEL['cookie'])}</button></div></div></footer>'''
