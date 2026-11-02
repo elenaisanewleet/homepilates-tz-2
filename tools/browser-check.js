@@ -6,15 +6,15 @@ async page => {
   const errors = [];
   const requireCheck = (condition, message) => { if (!condition) throw new Error(message); };
   page.on('pageerror', error => errors.push(error.message));
-  for (const width of widths) {
-    await page.setViewportSize({width, height: 900});
-    for (const route of routes) {
-      const response = await page.goto(origin + route);
-      requireCheck(response.status() === 200, 'HTTP error ' + route);
-      requireCheck(await page.locator('h1').count() === 1, 'H1 ' + route);
+  for (const route of routes) {
+    const response = await page.goto(origin + route);
+    requireCheck(response.status() === 200, 'HTTP error ' + route);
+    requireCheck(await page.locator('h1').count() === 1, 'H1 ' + route);
+    requireCheck(await page.locator('link[rel=canonical]').getAttribute('href') === 'https://classes.homepilates.ru' + route, 'Canonical ' + route);
+    for (const width of widths) {
+      await page.setViewportSize({width, height: 900});
       const viewport = await page.evaluate(() => [document.documentElement.clientWidth, document.documentElement.scrollWidth]);
-      requireCheck(viewport[1] <= viewport[0], 'Overflow ' + route + ' at ' + width + ': ' + viewport);
-      requireCheck(await page.locator('link[rel=canonical]').getAttribute('href') === 'https://classes.homepilates.ru' + route, 'Canonical ' + route);
+      requireCheck(viewport[0] === width && viewport[1] <= viewport[0], 'Overflow ' + route + ' at ' + width + ': ' + viewport);
     }
   }
   await page.setViewportSize({width:390,height:844});
@@ -53,5 +53,5 @@ async page => {
   await page.emulateMedia({reducedMotion:'reduce'});
   requireCheck(await page.locator('.btn').first().evaluate(el => getComputedStyle(el).transitionDuration === '0s'), 'Reduced motion');
   requireCheck(errors.length === 0, errors.join(', '));
-  console.log('PASS: 9 routes × 5 widths, menu, focus, trial CTA, 7 pricing groups, 8 FAQ, reduced motion and browser errors.');
+  return 'PASS: 9 routes × 5 widths, menu, focus, trial CTA, 7 pricing groups, 8 FAQ, reduced motion and browser errors.';
 }
