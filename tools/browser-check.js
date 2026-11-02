@@ -46,12 +46,21 @@ async page => {
     await page.keyboard.press('Enter');
     requireCheck(await answer.locator('.answer').isVisible(), 'FAQ keyboard');
   }
+  // Cookie choice: nothing goes to Metrika before consent or after "only essential"
+  const metrika = [];
+  page.on('request', request => { if (request.url().includes('mc.yandex.ru')) metrika.push(request.url()); });
+  await page.evaluate(() => localStorage.clear());
   await page.goto(origin);
-  await page.getByRole('link', {name:'Записаться на пробное',exact:true}).click();
-  requireCheck(new URL(page.url()).hash === '#svyaz', 'Trial contact destination');
-  requireCheck(await page.locator('#svyaz a[href^="tel:"], #svyaz a[href^="https://t.me/"]').count() === 2, 'Trial contact channels');
+  await page.locator('.cookie-box').waitFor({state:'visible'});
+  await page.locator('.cookie-box [name="essential"]').click();
+  requireCheck(await page.locator('.cookie-box').isHidden(), 'Cookie box closes');
+  await page.reload();
+  requireCheck(await page.locator('.cookie-box').isHidden() && metrika.length === 0, 'Metrika waits for consent');
+  await page.locator('.head-actions .btn').click();
+  requireCheck(new URL(page.url()).pathname.replace(/\/$/, '') === '/raspisanie', 'Booking leads to the schedule');
+  requireCheck(await page.locator('.mobi').count() === 1, 'One Mobifitness widget');
   await page.emulateMedia({reducedMotion:'reduce'});
   requireCheck(await page.locator('.btn').first().evaluate(el => getComputedStyle(el).transitionDuration === '0s'), 'Reduced motion');
   requireCheck(errors.length === 0, errors.join(', '));
-  return 'PASS: 9 routes × 5 widths, menu, focus, trial CTA, 7 pricing groups, 8 FAQ, reduced motion and browser errors.';
+  return 'PASS: 9 routes × 5 widths, menu, focus, 7 pricing groups, 8 FAQ, cookie and Metrika, booking route, reduced motion and browser errors.';
 }
