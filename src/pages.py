@@ -1,5 +1,6 @@
 from collections import defaultdict
 from html import escape as esc
+from pathlib import Path
 from urllib.parse import quote
 
 from reformer import illustration
@@ -56,12 +57,11 @@ def title(num, kicker, heading, desc):
     return f'<div class="page-intro wrap">{section_label(num,kicker)}<h1>{heading}</h1><p class="lede">{desc}</p></div>'
 
 
-def mark():
-    return '''<svg viewBox="0 0 40 36" width="40" height="36" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M2 29c4-1 7-6 11-15S22 2 28 3c4 1 5 5 3 9l-8 16c-3 6-11 7-12 1-1-5 6-12 13-14s12-1 13 2c2 5-6 11-15 11"/></g></svg>'''
+LOGO = Path(__file__).with_name('logo.svg').read_text(encoding='utf-8').strip()
 
 
 def wordmark():
-    return f'<a class="wordmark" href="/" aria-label="HomePilates — главная">{mark()}<span>HomePilates</span></a>'
+    return f'<a class="wordmark" href="/" aria-label="Хоум Пилатес — главная">{LOGO}</a>'
 
 
 def navlink(page, route):
@@ -170,7 +170,7 @@ def faq():
 
 
 def certificates():
-    return title('06','В подарок','Подарочные сертификаты','Подарите близкому человеку знакомство с реформером. Детали оформления можно обсудить со студией.') + f'''<div class="wrap panels"><div class="gift"><span class="eyebrow">HomePilates / Студия движения</span><div aria-hidden="true" class="giftmark">{mark()}</div><p>Подарочный<br>сертификат</p><small>Эскиз · Не для активации</small></div>
+    return title('06','В подарок','Подарочные сертификаты','Подарите близкому человеку знакомство с реформером. Детали оформления можно обсудить со студией.') + f'''<div class="wrap panels"><div class="gift"><div class="giftmark" role="img" aria-label="Хоум Пилатес">{LOGO}</div><p>Подарочный<br>сертификат</p><small>Эскиз · Не для активации</small></div>
     <section class="side-card">{section_label('HP','Оформление')}<h2>Выберите подарок</h2><p>Предложены варианты на 1, 2 или 3 занятия и VIP. Доступность, номинал, срок и способ получения уточните у администратора.</p><p class="note">Продажа и активация в демо недоступны.</p>{btn('Уточнить условия',CONTACT)}</section></div>'''
 
 

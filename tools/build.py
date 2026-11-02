@@ -33,7 +33,7 @@ def build():
     js = (SRC/'menu.js').read_text(encoding='utf-8')
     write(PUBLIC/'assets/theme.css', css)
     write(PUBLIC/'assets/menu.js', js)
-    write(PUBLIC/'favicon.svg', pages.mark().replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ').replace('currentColor','#3769A8'))
+    write(PUBLIC/'favicon.svg', pages.LOGO)
     write(TILDA/'shared-head.html', '<style>\n'+css+'\n</style>')
     seo = ['route,title,description,canonical']
     for route, _, title, description in pages.PAGES:
@@ -43,7 +43,7 @@ def build():
         head = f'''<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{escape(page_title)}</title><meta name="description" content="{escape(description)}">
         <meta name="robots" content="noindex, nofollow"><link rel="canonical" href="{PRODUCTION}{route}">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/assets/theme.css">
+        <link rel="icon" href="/favicon.svg?v=studio" type="image/svg+xml"><link rel="stylesheet" href="/assets/theme.css">
         <style>body{{margin:0;background:#f9f8f1}}</style><script src="/assets/menu.js" defer></script>'''
         write(PUBLIC/slug/'index.html', f'<!doctype html>\n<html lang="ru"><head>{head}</head><body>{body}</body></html>')
         write(TILDA/((slug or 'home')+'.html'), body+'\n<script>\n'+js+'\n</script>')
