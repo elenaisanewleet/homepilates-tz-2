@@ -1,0 +1,38 @@
+<div id="hp-site"><a class="skip" href="#content">К содержанию</a><header class="header"><div class="wrap headbar">
+    <a class="wordmark" href="/" aria-label="HomePilates — главная"><svg viewBox="0 0 40 36" width="40" height="36" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M2 29c4-1 7-6 11-15S22 2 28 3c4 1 5 5 3 9l-8 16c-3 6-11 7-12 1-1-5 6-12 13-14s12-1 13 2c2 5-6 11-15 11"/></g></svg><span>HomePilates</span></a><nav class="quick" aria-label="Основные разделы"><a href="/napravleniya">Направления</a><a href="/raspisanie">Расписание</a><a href="/stoimost">Стоимость</a><a href="/komanda">Команда</a></nav>
+    <div class="head-actions"><a class="btn" href="/kontakty#svyaz">Записаться<span class="arrow" aria-hidden="true">↗</span></a>
+    <details class="menu"><summary aria-controls="hp-nav" aria-label="Меню разделов"><span class="menu-lines" aria-hidden="true"></span><span class="menu-word">Меню</span></summary>
+    <nav id="hp-nav" aria-label="Все разделы"><a href="/">Главная</a><a href="/napravleniya">Направления</a><a href="/raspisanie">Расписание</a><a href="/stoimost">Стоимость</a><a href="/komanda">Команда</a><a href="/faq">Вопросы</a><a href="/sertifikaty">Сертификаты</a><a href="/kontakty">Контакты</a><a href="/cabinet" aria-current="page">Личный кабинет</a></nav></details></div></div></header><main id="content" tabindex="-1"><div class="page-intro wrap"><div class="eyebrow"><span class="index">08</span>Клиентам студии</div><h1>Личный кабинет</h1><p class="lede">Здесь будет доступ к записям и абонементам через кабинет Mobifitness.</p></div><div class="wrap panels"><section class="status-card"><div class="eyebrow"><i class="dot"></i>Личный кабинет · Демо</div><h2>Вход пока недоступен</h2><p>В демо вход по SMS отключён. О записи, остатке занятий или переносе спросите администратора.</p><a class="btn" href="/kontakty#svyaz">Обратиться к администратору<span class="arrow" aria-hidden="true">↗</span></a></section>
+    <aside class="side-card"><div class="eyebrow"><span class="index">HP</span>Быстрый переход</div><h2>Планируете занятие?</h2><p>Посмотрите форматы и стоимость или уточните удобное время.</p><a class="textlink" href="/raspisanie">К расписанию <span class="arrow" aria-hidden="true">→</span></a></aside></div></main><footer><div class="wrap footgrid"><div><a class="wordmark" href="/" aria-label="HomePilates — главная"><svg viewBox="0 0 40 36" width="40" height="36" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M2 29c4-1 7-6 11-15S22 2 28 3c4 1 5 5 3 9l-8 16c-3 6-11 7-12 1-1-5 6-12 13-14s12-1 13 2c2 5-6 11-15 11"/></g></svg><span>HomePilates</span></a><p>Студия пилатеса на реформерах<br>Москва, м. Ботанический сад</p></div>
+    <nav aria-label="Разделы в подвале"><a href="/napravleniya">Направления</a><a href="/raspisanie">Расписание</a><a href="/stoimost">Стоимость</a><a href="/komanda">Команда</a><a href="/faq">Вопросы</a><a href="/sertifikaty">Сертификаты</a><a href="/kontakty">Контакты</a><a href="/cabinet" aria-current="page">Личный кабинет</a></nav></div>
+    <div class="wrap footnote"><span>HomePilates · Москва</span><span>Демонстрационная версия</span></div></footer></div>
+<script>
+(() => {
+  const site = document.getElementById('hp-site');
+  if (!site) return;
+  const menu = site.querySelector('.menu');
+  site.querySelectorAll('details').forEach(details => {
+    const summary = details.querySelector('summary');
+    const update = () => summary.setAttribute('aria-expanded', String(details.open));
+    update();
+    details.addEventListener('toggle', update);
+  });
+  if (!menu) return;
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && menu.open) {
+      menu.open = false;
+      menu.querySelector('summary').focus();
+    }
+  });
+  document.addEventListener('click', event => {
+    if (menu.open && !menu.contains(event.target)) menu.open = false;
+  });
+  menu.addEventListener('click', event => {
+    if (event.target.closest('a')) menu.open = false;
+  });
+  menu.addEventListener('focusout', event => {
+    if (event.relatedTarget && !menu.contains(event.relatedTarget)) menu.open = false;
+  });
+})();
+
+</script>
